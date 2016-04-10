@@ -127,8 +127,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Login
+# Login page
 LOGIN_URL = '/login/'
+
+# User model
+AUTH_USER_MODEL = 'common.CustomUser'
 
 # .local.py overrides all the common settings.
 try:

@@ -17,16 +17,16 @@ from projects_helper.apps import lecturers
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'GET':
-        return render(request, 'index/login.html', {})
+        return render(request, 'common/login.html', {})
     elif request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
-            if students.email_check(user):
+            if students.is_student(user):
                 return redirect('students:profile')
-            elif lecturers.email_check(user):
+            elif lecturers.is_lecturer(user):
                 return redirect('lecturers:profile')
             else:
                 return HttpResponse("Invalid login details supplied.")

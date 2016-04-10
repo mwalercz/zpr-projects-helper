@@ -3,5 +3,6 @@ from django.db import models
 
 # Create your models here.
 
+
 class Student(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField('common.CustomUser', primary_key=True)

@@ -1,2 +1,2 @@
-def email_check(user):
-    return user.email.endswith('@student.com')
+def is_student(user):
+    return user.user_type == 'S'
