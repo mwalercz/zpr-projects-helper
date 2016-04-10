@@ -8,7 +8,6 @@ root = lambda *x: os.path.join(BASE_DIR, *x)
 
 sys.path.insert(0, root('apps'))
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'CHANGE THIS!!!'
 
@@ -23,6 +22,9 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'bootstrap3',
     'projects_helper.apps.projects',
+    'projects_helper.apps.common',
+    'projects_helper.apps.students',
+    'projects_helper.apps.lecturers',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,11 +78,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
-
 
 # Additional locations of static files
 
@@ -127,13 +127,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Login
+LOGIN_URL = '/login/'
 
 # .local.py overrides all the common settings.
 try:
     from .local import *  # noqa
 except ImportError:
     pass
-
 
 # importing test settings file if necessary
 if IN_TESTING:
