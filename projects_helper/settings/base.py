@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'projects_helper.apps.common',
     'projects_helper.apps.students',
     'projects_helper.apps.lecturers',
+    'registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -37,12 +37,18 @@ Jeśli posiadamy rozpakowany projekt, to pomijamy kroki 1-3.
     * dodajemy nowego użytkownika: 
         * username: projects_user, password: password
     * dodajemy nową baze danych: 
-        * name: projects_helper, jej właścicielem (ownerem) powinien być projects_user.   
+        * name: projects_helper, jej właścicielem (ownerem) powinien być projects_user
+        * jeśli nie podoba nam się nazwa/użytkownik bazy danych to można to zmienić w settings/local.py
 10. django tworzy dla nas bazę danych z dostępnych modeli
     * python3.4 manage.py makemigrations
     * python3.4 manage.py migrate  
 11. odpalamy serwer django
     * cd zpr-projects-helper
+    * jeśli nie podoba nam się nazwa bazy danych/użytkownik, to w settings/local.py -> DATABASES możemy sobie zmienić, równie dobrze możemy ustawić sqllite jako podstawową bazę i wtedy nic nie trzeba konfigurowac
+8. django tworzy dla nas bazę danych z dostępnych modeli
+    * python3.4 manage.py makemigrations
+    * python3.4 manage.py migrate
+9. odpalamy serwer django
     * python3.4 manage.py runserver
     * wchodzimy w przeglądarce na stronę localhost:8000/projects - strona do zarządzania projektami   
 12. odpalamy testy
