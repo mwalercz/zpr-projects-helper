@@ -37,6 +37,7 @@ Jeśli posiadamy rozpakowany szkielet projektu z innego źródła niż github, t
         * username: projects_user, password: password
     * dodajemy nową baze danych: 
         * name: projects_helper, jej właścicielem (ownerem) powinien być projects_user.   
+    * jeśli chcemy stworzyć bazę danych o innej nazwie/innego użytkownika możemy wejść w settings/local.py i tam w Databases wpisać odpowiednie informacje(name/user)
 8. django tworzy dla nas bazę danych z dostępnych modeli
     * python3.4 manage.py makemigrations
     * python3.4 manage.py migrate
