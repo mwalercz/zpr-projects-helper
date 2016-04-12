@@ -8,7 +8,7 @@ urlpatterns = [
         name="login"),
     url(r'^register/$',
         CustomRegistrationView.as_view
-        (template_name='registration/registration_form.html'),
+        (template_name='common/registration_form.html'),
         name="register"),
 
 ]

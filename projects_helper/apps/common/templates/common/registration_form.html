@@ -1,4 +1,4 @@
-<form action="{% url 'common:register' %}" method="post">
+<form id="registration_form" action="{% url 'common:register' %}" method="post">
     {% csrf_token %}
     {{ form.as_ul }}
     <input type="submit" value="OK">

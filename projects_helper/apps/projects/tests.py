@@ -51,7 +51,7 @@ class ProjectTest(WebTest):
         Test that we can update an instance via the update view.
         """
         instance = mommy.make(Project)
-        response = self.app.get(reverse('projects:update', kwargs={'pk': instance.pk, }))
+        response = self.app.get(reverse('projects:update', kwargs={'pk': instance.pk,}))
 
         form = response.forms['project_form']
         new_name = 'Some new thing'
@@ -67,6 +67,6 @@ class ProjectTest(WebTest):
         """
         instance = mommy.make(Project)
         pk = instance.pk
-        response = self.app.get(reverse('projects:delete', kwargs={'pk': pk, }))
+        response = self.app.get(reverse('projects:delete', kwargs={'pk': pk,}))
         response = response.form.submit().follow()
         self.assertFalse(Project.objects.filter(pk=pk).exists())

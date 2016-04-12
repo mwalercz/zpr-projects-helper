@@ -11,16 +11,16 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('lecturers', '0001_initial'),
+        ('projects', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Project',
+            name='Team',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
-                ('lecturer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lecturers.Lecturer')),
+                ('project_preference', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.Project')),
             ],
         ),
     ]

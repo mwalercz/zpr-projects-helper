@@ -5,4 +5,5 @@ from django.db import models
 
 
 class Lecturer(models.Model):
-    user = models.OneToOneField('common.CustomUser', primary_key=True)
+    user = models.OneToOneField('common.CustomUser',
+                                primary_key=True)
