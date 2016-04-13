@@ -1,9 +1,7 @@
 from django.core.urlresolvers import reverse
 # Create your tests here.
 from django_webtest import WebTest
-
-from projects_helper.apps.common.models import CustomUser
-
+from ..models import *
 
 class RegistrationTest(WebTest):
     def test_custom_registration_view(self):

@@ -128,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Login page
-LOGIN_URL = '/login/'
+LOGIN_URL = '/common/login/'
 
 # User model
 AUTH_USER_MODEL = 'common.CustomUser'

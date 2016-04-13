@@ -1,5 +1,15 @@
-<form id="registration_form" action="{% url 'common:register' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_ul }}
-    <input type="submit" value="OK">
-</form>
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <form id="registration_form" action="{% url 'common:register' %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} Register
+            </button>
+        {% endbuttons %}
+    </form>
+
+{% endblock %}

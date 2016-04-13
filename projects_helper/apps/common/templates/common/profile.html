@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    Username
+    <div>{{ user.username }}</div>
+    Email
+    <div>{{ user.email }}</div>
+    {% block concrete_profile %}
+    {% endblock %}
+{% endblock %}

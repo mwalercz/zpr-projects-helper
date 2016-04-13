@@ -1,3 +1,4 @@
+from django.contrib import auth
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -20,7 +21,8 @@ from .models import *
 @never_cache
 def user_login(request):
     if request.method == 'GET':
-        return render(request, 'common/login.html', {})
+        return auth.views.login(request,
+                                template_name="common/login.html")
     elif request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -40,6 +42,8 @@ def user_login(request):
 
 
 class CustomRegistrationView(RegistrationView):
+    template_name = 'common/registration_form.html'
+
     def get_form_class(self):
         return CustomRegistrationForm
 
