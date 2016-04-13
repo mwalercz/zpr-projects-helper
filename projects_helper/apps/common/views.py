@@ -12,8 +12,7 @@ from registration.backends.simple.views import RegistrationView
 from projects_helper.apps import students
 from projects_helper.apps import lecturers
 from projects_helper.apps.common.forms import CustomRegistrationForm
-from projects_helper.apps.lecturers.models import Lecturer
-from projects_helper.apps.students.models import Student
+from .models import *
 
 
 @sensitive_post_parameters()

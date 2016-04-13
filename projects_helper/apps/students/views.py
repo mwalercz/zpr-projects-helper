@@ -11,4 +11,3 @@ def profile(request):
     return render(request, "students/profile.html")
 
 
-
