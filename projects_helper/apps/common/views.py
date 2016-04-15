@@ -1,5 +1,6 @@
 from django.contrib import auth
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -62,3 +63,6 @@ class CustomRegistrationView(RegistrationView):
             return 'students:profile'
         elif lecturers.is_lecturer(new_user):
             return 'lecturers:profile'
+
+
+

@@ -11,7 +11,10 @@ class CustomRegistrationForm(RegistrationForm):
         model = get_user_model()
 
     user_type = ChoiceField(
-        choices=CustomUser.type_choices,
+        choices=(
+            ('S', 'Student'),
+            ('L', 'Lecturer'),
+        ),
         label='User type',
     )
 

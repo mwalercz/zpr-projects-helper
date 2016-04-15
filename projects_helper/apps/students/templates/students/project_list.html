@@ -1,5 +1,14 @@
-{% extends "base.html" %}
+{% extends "students/base.html" %}
 {% block content %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <h2>Projects</h2>
     <table class="table table-striped">
         <tr>
@@ -12,12 +21,12 @@
             <tr>
                 {% if project.status == "free" %}
                     <td><a href='{% url 'students:pick_project' project.pk %}'>Pick</a></td>
-                        {% else %}
+                {% else %}
                     <td>Can't pick</td>
                 {% endif %}
                 <td>{{ project.status }}</td>
-                <td>{{ project.title }}</td>
-                <td>{{ project.lecturer.username }}</td>
+                <td><a href="{% url 'students:project' project.pk %}">{{ project.title }}</a></td>
+                <td>{{ project.lecturer.user.username }}</td>
             </tr>
         {% endfor %}
     </table>

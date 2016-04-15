@@ -9,24 +9,26 @@ class Team(models.Model):
                                            null=True,
                                            blank=True)
 
-        # def students_number(self):
-        #     students_in_team = Student.objects.get(team_id=self.pk)
-        #     return len(students_in_team)
+    def project_assigned(self):
+        try:
+            project = Project.objects.get(team_assigned=self)
+            return project
+        except models.ObjectDoesNotExist:
+            return None
 
-        # def save(self, *args, **kwargs):
-        #     # team is being created for the first time == no pk
-        #     if self.pk is None:
-        #         return super(Team, self).save(*args, **kwargs)
-        #
-        #     # proceed according to students_number
-        #     else:
-        #         students_number = self.students_number()
-        #         if students_number == 0:
-        #             self.delete()
-        #         elif students_number > 2:
-        #             raise TooManyStudentsInTeam
-        #         else:
-        #             return super(Team, self).save(*args, **kwargs)
+
+    def students_in_team(self):
+        return self.student_set.all()
+
+    def __str__(self):
+        str = ""
+        for student in self.student_set.all():
+            str += student.user.username + " "
+
+        if str == "":
+            return "None"
+        else:
+            return str
 
 
 class Project(models.Model):
@@ -51,12 +53,13 @@ class Project(models.Model):
 
 class CustomUser(AbstractUser):
     type_choices = (
+        ('SU', 'SuperUser'),
         ('S', 'Student'),
         ('L', 'Lecturer'),
     )
     user_type = models.CharField(max_length=2,
                                  choices=type_choices,
-                                 default='S')
+                                 default='SU')
 
 
 class Student(models.Model):
@@ -70,8 +73,19 @@ class Student(models.Model):
             self.team = Team.objects.create()
         return super(Student, self).save(*args, **kwargs)
 
+    # def project_assigned(self):
+    #     return self.team.project_assigned()
+    #
+    # def project_preference(self):
+    #     return self.team.project_preference
+
+    def __str__(self):
+        return self.user.username
+
 
 class Lecturer(models.Model):
     user = models.OneToOneField(CustomUser,
                                 primary_key=True)
 
+    def __str__(self):
+        return self.user.username

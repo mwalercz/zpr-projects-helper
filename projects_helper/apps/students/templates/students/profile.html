@@ -1,5 +1,42 @@
-{% extends 'common/profile.html' %}
+{% extends 'students/base.html' %}
+{% block content %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% include "common/profile.html" %}
+    <h2>Student profile</h2>
+    <div>Team
+        <div>{{ student.team }}</div>
+    </div>
+    <div>Project preference
+        {% with project_preference=student.team.project_preference %}
+            {% if project_preference == None %}
+                <div>You have not picked project</div>
+            {% else %}
+                <div>
+                    <a href="{% url 'students:project' project_preference.pk %}">
+                        {{ project_preference }}</a>
+                    </a>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div>Status
+        {% with project_assigned=student.team.project_assigned %}
+            {% if project_assigned == None %}
+                <div>You are not assigned to project</div>
+            {% else %}
+                <div>You are assigned to project:
+                    <a href="{% url 'students:project' project_assigned.pk %}">
+                        {{ project_assigned }}
+                    </a>
+                </div>
+            {% endif %}
+        {% endwith %}
 
-{% block concrete_profile %}
-<div>stud profile</div>
-{% endblock  %}
+    </div>
+{% endblock %}
