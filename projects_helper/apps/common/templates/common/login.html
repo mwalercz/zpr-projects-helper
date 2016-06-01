@@ -4,7 +4,9 @@
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
-
+    </br>
+<a><input type="button" value="Register"
+          onClick="window.location.href='{% url 'common:register' %}'" /></a>
 
     <form method="post" action="{% url 'common:login' %}">
         {% csrf_token %}
@@ -13,7 +15,9 @@
             <button type="submit" class="btn btn-primary">
                 {% bootstrap_icon "star" %} Login
             </button>
+
         {% endbuttons %}
     </form>
+
 
 {% endblock %}

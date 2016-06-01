@@ -35,7 +35,9 @@ class Team(models.Model):
     def __str__(self):
         tmp_str = ""
         for student in self.student_set.all():
-            tmp_str += student.user.username + " "
+            if tmp_str != "":
+                tmp_str += ", "
+            tmp_str += student.user.username
 
         if tmp_str == "":
             return "Team " + str(self.pk)
