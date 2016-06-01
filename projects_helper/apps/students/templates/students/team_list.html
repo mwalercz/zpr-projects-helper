@@ -1,0 +1,30 @@
+{% extends "students/base.html" %}
+{% block content %}
+    {% load bootstrap3 %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Projects</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Join</th>
+            <th>Team</th>
+        </tr>
+        {% for team in teams %}
+            <tr>
+            <td>
+                {% if not team.is_full %}
+                    <a href='{% url 'students:join_team' team.pk %}'>{% bootstrap_icon "ok" %}</a>
+                {% endif %}
+            </td>
+                <td>{{ team }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

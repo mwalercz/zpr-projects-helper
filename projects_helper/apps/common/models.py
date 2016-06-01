@@ -19,6 +19,19 @@ class Team(models.Model):
     def students_in_team(self):
         return self.student_set.all()
 
+    @property
+    def is_full(self):
+        if len(self.student_set.all()) == 2:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def remove_empty():
+        for team in Team.objects.all():
+            if len(team.students_in_team()) == 0:
+                team.delete()
+
     def __str__(self):
         tmp_str = ""
         for student in self.student_set.all():

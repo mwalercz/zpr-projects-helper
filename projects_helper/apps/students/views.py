@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.views.generic import ListView
 
-from projects_helper.apps.common.models import Project, Student
+from projects_helper.apps.common.models import Project, Student, Team
 from projects_helper.apps.students import is_student
 
 
@@ -63,3 +63,35 @@ class ListProjects(ListView, LoginRequiredMixin, UserPassesTestMixin):
     model = Project
     template_name = "students/project_list.html"
     context_object_name = 'projects'
+
+
+class ListTeams(ListView, LoginRequiredMixin, UserPassesTestMixin):
+        def test_func(self):
+            return is_student(self.request.user)
+
+        model = Team
+        template_name = "students/team_list.html"
+        context_object_name = 'teams'
+
+@login_required
+@user_passes_test(is_student)
+def join_team(request, team_pk):
+    team = Team.objects.get(pk=team_pk)
+    if not team.is_full:
+        student = Student.objects.get(user=request.user)
+        team.student_set.add(student)
+        Team.remove_empty()
+
+    return redirect(reverse('students:team_list'))
+
+
+@login_required
+@user_passes_test(is_student)
+def new_team(request):
+    team = Team()
+    team.save()
+    student = Student.objects.get(user=request.user)
+    student.team = team
+    student.save()
+    Team.remove_empty()
+    return redirect(reverse('students:team_list'))
