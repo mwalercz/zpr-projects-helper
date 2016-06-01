@@ -16,19 +16,18 @@ class Team(models.Model):
         except models.ObjectDoesNotExist:
             return None
 
-
     def students_in_team(self):
         return self.student_set.all()
 
     def __str__(self):
-        str = ""
+        tmp_str = ""
         for student in self.student_set.all():
-            str += student.user.username + " "
+            tmp_str += student.user.username + " "
 
-        if str == "":
-            return "None"
+        if tmp_str == "":
+            return "Team " + str(self.pk)
         else:
-            return str
+            return tmp_str
 
 
 class Project(models.Model):
@@ -39,7 +38,11 @@ class Project(models.Model):
                                  on_delete=models.CASCADE)
     team_assigned = models.OneToOneField('common.Team',
                                          null=True,
+
                                          blank=True)
+
+    def teams_with_preference(self):
+        return Team.objects.filter(project_preference = self)
 
     def status(self):
         if self.team_assigned is None:

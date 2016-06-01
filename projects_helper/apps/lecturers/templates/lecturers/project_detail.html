@@ -1,0 +1,31 @@
+{% extends 'lecturers/base.html' %}
+
+{% block content %}
+    {% include 'common/project_detail.html' %}
+
+</br>
+    <table>
+    <tr>
+        <th>Teams assigned:</th>
+    </tr>
+    <tr>
+        <td>{{ project.team_assigned }}</td>
+    </tr>
+    </table>
+
+
+
+    {% if project.status == "free" %}
+        </br>
+    <table>
+    <tr>
+        <th>Teams waiting for this project:</th>
+    </tr>
+        {% for team in project.teams_with_preference %}
+    <tr>
+        <td>{{ team }}</td>
+    </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endblock %}

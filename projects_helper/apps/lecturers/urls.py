@@ -4,5 +4,9 @@ from projects_helper.apps.lecturers import views
 
 urlpatterns = [
     url(r'^profile/$', views.profile, name="profile"),
+    url(r'^projects/$', views.ListProjects.as_view(), name="project_list"),
+    url(r'^projects/(?P<project_pk>\d+)/$', views.project, name="project"),
+    url(r'^projects/(?P<project_pk>\d+)/del/$', views.project_delete, name="project_delete"),
+    url(r'^projects/new/$', views.project_new, name="project_new"),
 
 ]
