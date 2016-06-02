@@ -5,9 +5,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib import messages
 from django.forms import ModelForm
+from django.db import IntegrityError
 
 from projects_helper.apps.lecturers import is_lecturer
 from projects_helper.apps.common.models import Project, Lecturer
+from projects_helper.apps.lecturers.forms import ProjectForm
 
 
 @login_required
@@ -30,8 +32,9 @@ class ListProjects(ListView, LoginRequiredMixin, UserPassesTestMixin):
         # Add in a QuerySet of all the books
         context['lecturer'] = Lecturer.objects.get(user=self.request.user)
         return context
-    # def get_queryset(self):
-    #     return Project.objects.filter(lecturer = Lecturer.objects.get(user = self.request.user))
+        # def get_queryset(self):
+        #     return Project.objects.filter(lecturer = Lecturer.objects.get(user = self.request.user))
+
 
 @login_required
 @user_passes_test(is_lecturer)
@@ -41,10 +44,11 @@ def project(request, project_pk):
                   context={'project': proj,
                            'lecturer': Lecturer.objects.get(user=request.user)})
 
+
 @login_required
 @user_passes_test(is_lecturer)
 def project_delete(request, project_pk):
-    proj =  Project.objects.get(pk=project_pk)
+    proj = Project.objects.get(pk=project_pk)
     if proj.lecturer.user == request.user:
         if proj.status() == 'free':
             proj.delete()
@@ -56,10 +60,7 @@ def project_delete(request, project_pk):
     return redirect(reverse('lecturers:project_list'))
 
 
-class ProjectForm(ModelForm):
-    class Meta:
-        model = Project
-        fields = ['title', 'description']
+
 
 
 @login_required
@@ -67,16 +68,25 @@ class ProjectForm(ModelForm):
 def project_new(request):
     form = ProjectForm(request.POST)
     if form.is_valid():
-        proj = form.save(commit=False)
-        proj.lecturer = Lecturer.objects.get(user = request.user)
-        proj.save()
+        try:
+            proj = form.save(commit=False)
+            proj.lecturer = Lecturer.objects.get(user=request.user)
+            proj.save()
+        except IntegrityError as error:
+            messages.error(request, "\n You must provide unique project name")
+            return render(request, "lecturers/project_new.html",
+                          context={'form': form})
+
+        messages.info(request, "You have succesfully added new project: " + proj.title)
+        return redirect(reverse('lecturers:project_list'))
     return render(request, "lecturers/project_new.html",
                   context={'form': form})
+
 
 @login_required
 @user_passes_test(is_lecturer)
 def assign_team(request, project_pk):
-    proj =  Project.objects.get(pk=project_pk)
+    proj = Project.objects.get(pk=project_pk)
     if proj.lecturer.user == request.user:
         if proj.teams_with_preference().count() == 0:
             messages.error(request, "Cannot assign: No teams waiting for project")

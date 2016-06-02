@@ -73,8 +73,10 @@ class Project(models.Model):
                                  on_delete=models.CASCADE)
     team_assigned = models.OneToOneField('common.Team',
                                          null=True,
-
                                          blank=True)
+
+    class Meta:
+        unique_together = ('lecturer', 'title',)
 
     def teams_with_preference(self):
         return Team.objects.filter(project_preference=self)

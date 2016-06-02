@@ -1,7 +1,6 @@
 from django.contrib import auth
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -23,7 +22,7 @@ from .models import *
 def user_login(request):
     if request.method == 'GET':
         return auth.views.login(request,
-                                template_name="common/login.html")
+                                template_name="common/login_form.html")
     elif request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -35,9 +34,11 @@ def user_login(request):
             elif lecturers.is_lecturer(user):
                 return redirect('lecturers:profile')
             else:
-                return HttpResponse("Invalid login details supplied.")
+                messages.error(request, "Invalid login details supplied.")
+                return redirect('common:login')
         else:
-            return HttpResponse("Invalid login details supplied.")
+            messages.error(request, "Invalid login details supplied.")
+            return redirect('common:login')
     else:
         return render(request, '404.html')
 
