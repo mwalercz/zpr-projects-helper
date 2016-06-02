@@ -32,17 +32,20 @@ def pick_project(request, project_pk):
     student = Student.objects.get(user=request.user)
     team = student.team
     project_picked = Project.objects.get(pk=project_pk)
-    if project_picked.status() == "free":
-        team.project_preference = project_picked
+    if project_picked.status() == "free" and not team.is_locked:
+        team.select_preference(project_picked)
         team.save()
         messages.success(request,
                          "You have successfully picked project " +
                          project_picked.title)
-    else:
+    elif project_picked.status() != "free":
         messages.error(request,
                        "Project " + project_picked +
                        " is already occupied," +
                        " you can't pick that project")
+    elif team.is_locked:
+        messages.error(request,
+                       "You can't pick project: project already assigned")
 
     return redirect(reverse('students:project_list'))
 
@@ -64,6 +67,13 @@ class ListProjects(ListView, LoginRequiredMixin, UserPassesTestMixin):
     template_name = "students/project_list.html"
     context_object_name = 'projects'
 
+    def get_context_data(self, **kwargs):
+        context = super(ListProjects, self).get_context_data(**kwargs)
+        student = Student.objects.get(user=self.request.user)
+        context['team'] = student.team
+        context['project_picked'] = student.project_preference()
+        return context
+
 
 class ListTeams(ListView, LoginRequiredMixin, UserPassesTestMixin):
         def test_func(self):
@@ -73,14 +83,16 @@ class ListTeams(ListView, LoginRequiredMixin, UserPassesTestMixin):
         template_name = "students/team_list.html"
         context_object_name = 'teams'
 
+
 @login_required
 @user_passes_test(is_student)
 def join_team(request, team_pk):
     team = Team.objects.get(pk=team_pk)
-    if not team.is_full:
-        student = Student.objects.get(user=request.user)
-        team.student_set.add(student)
-        Team.remove_empty()
+    student = Student.objects.get(user=request.user)
+    student.join_team(team)
+    student.save()
+    Team.remove_empty()
+
 
     return redirect(reverse('students:team_list'))
 
@@ -88,10 +100,8 @@ def join_team(request, team_pk):
 @login_required
 @user_passes_test(is_student)
 def new_team(request):
-    team = Team()
-    team.save()
     student = Student.objects.get(user=request.user)
-    student.team = team
+    student.new_team()
     student.save()
     Team.remove_empty()
     return redirect(reverse('students:team_list'))

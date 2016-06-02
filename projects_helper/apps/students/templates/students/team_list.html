@@ -21,7 +21,7 @@
         {% for team in teams %}
             <tr>
             <td>
-                {% if not team.is_full %}
+                {% if not team.is_full and  not team.is_locked %}
                     <a href='{% url 'students:join_team' team.pk %}'>{% bootstrap_icon "ok" %}</a>
                 {% endif %}
             </td>

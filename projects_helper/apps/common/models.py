@@ -10,6 +10,12 @@ class Team(models.Model):
                                            null=True,
                                            blank=True)
 
+    def select_preference(self, project):
+        if not self.is_locked:
+            self.project_preference = project
+        else:
+            self.project_preference = self.project_assigned()
+
     def project_assigned(self):
         try:
             project = Project.objects.get(team_assigned=self)
@@ -26,6 +32,14 @@ class Team(models.Model):
             return True
         else:
             return False
+
+    @property
+    def is_locked(self):
+        if self.project_assigned() is not None:
+            return True
+        else:
+            return False
+
 
     @staticmethod
     def remove_empty():
@@ -67,9 +81,12 @@ class Project(models.Model):
             return "occupied"
 
     def assign_random_team(self):
-        teams = self.teams_with_preference().filter(team_assigned = None)
-        if teams.count() > 0:
-            random_idx = randint(0, teams.count() - 1)
+        teams = list(self.teams_with_preference().filter(project = None))
+        full_teams = [x for x in teams if x.is_full]
+        if len(full_teams) > 0:
+            teams = full_teams
+        if len(teams) > 0:
+            random_idx = randint(0, len(teams) - 1)
             self.team_assigned = teams[random_idx]
             self.save()
 
@@ -94,16 +111,26 @@ class Student(models.Model):
     team = models.ForeignKey('common.Team',
                              blank=True)
 
+    def new_team(self):
+        if not self.team.is_locked:
+            team = Team()
+            team.save()
+            self.join_team(team)
+
+    def join_team(self, team):
+        if not self.team.is_locked and not team.is_full:
+            self.team = team;
+
     def save(self, *args, **kwargs):
         if self.team_id is None:
             self.team = Team.objects.create()
         return super(Student, self).save(*args, **kwargs)
 
-    # def project_assigned(self):
-    #     return self.team.project_assigned()
-    #
-    # def project_preference(self):
-    #     return self.team.project_preference
+    def project_assigned(self):
+        return self.team.project_assigned()
+
+    def project_preference(self):
+        return self.team.project_preference
 
     def __str__(self):
         return self.user.username

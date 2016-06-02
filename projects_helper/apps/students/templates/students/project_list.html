@@ -19,7 +19,9 @@
         </tr>
         {% for project in projects %}
             <tr>
-                {% if project.status == "free" %}
+                {% if project == project_picked %}
+                    <td>Picked</td>
+                {% elif project.status == "free" and not team.is_locked %}
                     <td><a href='{% url 'students:pick_project' project.pk %}'>Pick</a></td>
                 {% else %}
                     <td>Can't pick</td>
