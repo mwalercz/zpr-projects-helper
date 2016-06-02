@@ -2,6 +2,7 @@ from enum import Enum
 
 from django.contrib.auth.models import User, AbstractUser
 from django.db import models
+from random import randint
 
 
 class Team(models.Model):
@@ -64,6 +65,13 @@ class Project(models.Model):
             return "free"
         else:
             return "occupied"
+
+    def assign_random_team(self):
+        teams = self.teams_with_preference().filter(team_assigned = None)
+        if teams.count() > 0:
+            random_idx = randint(0, teams.count() - 1)
+            self.team_assigned = teams[random_idx]
+            self.save()
 
     def __str__(self):
         return self.title

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib import messages
 from django.forms import ModelForm
 
@@ -38,7 +38,8 @@ class ListProjects(ListView, LoginRequiredMixin, UserPassesTestMixin):
 def project(request, project_pk):
     proj = Project.objects.get(pk=project_pk)
     return render(request, "lecturers/project_detail.html",
-                  context={'project': proj})
+                  context={'project': proj,
+                           'lecturer': Lecturer.objects.get(user=request.user)})
 
 @login_required
 @user_passes_test(is_lecturer)
@@ -71,3 +72,17 @@ def project_new(request):
         proj.save()
     return render(request, "lecturers/project_new.html",
                   context={'form': form})
+
+@login_required
+@user_passes_test(is_lecturer)
+def assign_team(request, project_pk):
+    proj =  Project.objects.get(pk=project_pk)
+    if proj.lecturer.user == request.user:
+        if proj.teams_with_preference().count() == 0:
+            messages.error(request, "Cannot assign: No teams waiting for project")
+        else:
+            proj.assign_random_team()
+    else:
+        messages.error(request, "Cannot assign: access denied")
+
+    return redirect(reverse_lazy('lecturers:project', kwargs={'project_pk': proj.pk}))
