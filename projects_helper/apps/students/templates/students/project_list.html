@@ -1,6 +1,6 @@
 {% extends "students/base.html" %}
 {% block content %}
-
+    {% load bootstrap3 %}
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -20,15 +20,15 @@
         {% for project in projects %}
             <tr>
                 {% if project == project_picked %}
-                    <td>Picked</td>
+                    <td>{% bootstrap_icon "user" %}</td>
                 {% elif project.status == "free" and not team.is_locked %}
-                    <td><a href='{% url 'students:pick_project' project.pk %}'>Pick</a></td>
+                    <td><a href='{% url 'students:pick_project' project.pk %}'>{% bootstrap_icon "ok" %}</a></td>
                 {% else %}
-                    <td>Can't pick</td>
+                    <td></td>
                 {% endif %}
                 <td>{{ project.status }}</td>
                 <td><a href="{% url 'students:project' project.pk %}">{{ project.title }}</a></td>
-                <td>{{ project.lecturer.user.username }}</td>
+                <td> <a href="mailto:{{ project.lecturer.user.email }}">{{ project.lecturer.user.username }}</a></td>
             </tr>
         {% endfor %}
     </table>

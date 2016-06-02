@@ -50,7 +50,6 @@ class CustomRegistrationView(RegistrationView):
 
     def register(self, form):
         new_user = super(CustomRegistrationView, self).register(form)
-
         if students.is_student(new_user):
             Student.objects.create(user=new_user)
         if lecturers.is_lecturer(new_user):

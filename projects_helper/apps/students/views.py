@@ -15,7 +15,7 @@ from projects_helper.apps.students import is_student
 @user_passes_test(is_student)
 def profile(request):
     student = Student.objects.get(pk=request.user.pk)
-    project_assigned = student.team.project_assigned()
+    project_assigned = student.team.project_assigned
     if project_assigned is not None:
         messages.info(request, "You are already assigned to project."
                                "You can't switch project preference."
@@ -71,7 +71,7 @@ class ListProjects(ListView, LoginRequiredMixin, UserPassesTestMixin):
         context = super(ListProjects, self).get_context_data(**kwargs)
         student = Student.objects.get(user=self.request.user)
         context['team'] = student.team
-        context['project_picked'] = student.project_preference()
+        context['project_picked'] = student.project_preference
         return context
 
 

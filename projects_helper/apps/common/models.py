@@ -14,8 +14,9 @@ class Team(models.Model):
         if not self.is_locked:
             self.project_preference = project
         else:
-            self.project_preference = self.project_assigned()
+            self.project_preference = self.project_assigned
 
+    @property
     def project_assigned(self):
         try:
             project = Project.objects.get(team_assigned=self)
@@ -23,6 +24,7 @@ class Team(models.Model):
         except models.ObjectDoesNotExist:
             return None
 
+    @property
     def students_in_team(self):
         return self.student_set.all()
 
@@ -35,16 +37,19 @@ class Team(models.Model):
 
     @property
     def is_locked(self):
-        if self.project_assigned() is not None:
+        if self.project_assigned is not None:
             return True
         else:
             return False
 
+    @property
+    def team_members(self):
+        return self.student_set.all()
 
     @staticmethod
     def remove_empty():
         for team in Team.objects.all():
-            if len(team.students_in_team()) == 0:
+            if len(team.students_in_team) == 0:
                 team.delete()
 
     def __str__(self):
@@ -72,7 +77,7 @@ class Project(models.Model):
                                          blank=True)
 
     def teams_with_preference(self):
-        return Team.objects.filter(project_preference = self)
+        return Team.objects.filter(project_preference=self)
 
     def status(self):
         if self.team_assigned is None:
@@ -81,7 +86,7 @@ class Project(models.Model):
             return "occupied"
 
     def assign_random_team(self):
-        teams = list(self.teams_with_preference().filter(project = None))
+        teams = list(self.teams_with_preference().filter(project=None))
         full_teams = [x for x in teams if x.is_full]
         if len(full_teams) > 0:
             teams = full_teams
@@ -111,6 +116,14 @@ class Student(models.Model):
     team = models.ForeignKey('common.Team',
                              blank=True)
 
+    @property
+    def project_assigned(self):
+        return self.team.project_assigned
+
+    @property
+    def project_preference(self):
+        return self.team.project_preference
+
     def new_team(self):
         if not self.team.is_locked:
             team = Team()
@@ -125,12 +138,6 @@ class Student(models.Model):
         if self.team_id is None:
             self.team = Team.objects.create()
         return super(Student, self).save(*args, **kwargs)
-
-    def project_assigned(self):
-        return self.team.project_assigned()
-
-    def project_preference(self):
-        return self.team.project_preference
 
     def __str__(self):
         return self.user.username

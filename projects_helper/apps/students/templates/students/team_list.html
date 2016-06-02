@@ -20,19 +20,35 @@
         </tr>
         {% for team in teams %}
             <tr>
-            <td>
-                {% if not team.is_full and  not team.is_locked %}
-                    <a href='{% url 'students:join_team' team.pk %}'>{% bootstrap_icon "ok" %}</a>
-                {% endif %}
-            </td>
+                <td>
+                    {% if not team.is_full and  not team.is_locked %}
+                        <a href='{% url 'students:join_team' team.pk %}'>{% bootstrap_icon "ok" %}</a>
+                    {% endif %}
+                </td>
                 <td>{{ team }}</td>
-                <td>{{ team.project_assigned }}</td>
-                <td>{{ team.project_preference}}</td>
+                <td>
+                    {% with project_assigned=team.project_assigned %}
+                        {% if project_assigned != None %}
+                            <a href='{% url 'students:project' project_assigned.pk %}'> {{ project_assigned }} </a>
+                        {% else %}
+                            {{ project_assigned }}
+                        {% endif %}
+                    {% endwith %}
+                </td>
+                <td>
+                    {% with project_preference=team.project_preference %}
+                        {% if project_preference != None %}
+                            <a href='{% url 'students:project' project_preference.pk %}'> {{ project_preference }} </a>
+                        {% else %}
+                            {{ project_preference }}
+                        {% endif %}
+                    {% endwith %}
+                </td>
             </tr>
 
         {% endfor %}
     </table>
     <br/>
     <a><input type="button" value="New Team"
-          onClick="window.location.href='{% url 'students:new_team' %}'" /></a>
+              onClick="window.location.href='{% url 'students:new_team' %}'"/></a>
 {% endblock %}
