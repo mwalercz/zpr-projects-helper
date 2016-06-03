@@ -86,12 +86,14 @@ class ListTeams(ListView, LoginRequiredMixin, UserPassesTestMixin):
 
 @login_required
 @user_passes_test(is_student)
-def join_team(request, team_pk):
-    team = Team.objects.get(pk=team_pk)
-    student = Student.objects.get(user=request.user)
-    student.join_team(team)
-    student.save()
-    Team.remove_empty()
+def join_team(request):
+    team_pk = request.POST.get('to_join', False)
+    if team_pk:
+        team = Team.objects.get(pk=team_pk)
+        student = Student.objects.get(user=request.user)
+        student.join_team(team)
+        student.save()
+        Team.remove_empty()
 
 
     return redirect(reverse('students:team_list'))
