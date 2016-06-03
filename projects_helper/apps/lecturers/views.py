@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test, login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -47,15 +47,17 @@ def project(request, project_pk):
 
 @login_required
 @user_passes_test(is_lecturer)
-def project_delete(request, project_pk):
-    proj = Project.objects.get(pk=project_pk)
-    if proj.lecturer.user == request.user:
-        if proj.status() == 'free':
-            proj.delete()
+def project_delete(request):
+    proj_pk = request.POST.get('to_delete', False)
+    if proj_pk:
+        proj = get_object_or_404(Project, pk=request.POST['to_delete'])
+        if proj.lecturer.user == request.user:
+            if proj.status() == 'free':
+                 proj.delete()
+            else:
+                messages.error(request, "Cannot delete occupied project")
         else:
-            messages.error(request, "Cannot delete occupied project")
-    else:
-        messages.error(request, "Cannot delete project: access denied")
+            messages.error(request, "Cannot delete project: access denied")
 
     return redirect(reverse('lecturers:project_list'))
 
@@ -66,7 +68,10 @@ def project_delete(request, project_pk):
 @login_required
 @user_passes_test(is_lecturer)
 def project_new(request):
-    form = ProjectForm(request.POST)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+    else:
+        form = ProjectForm()
     if form.is_valid():
         try:
             proj = form.save(commit=False)

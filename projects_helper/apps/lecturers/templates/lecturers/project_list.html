@@ -6,6 +6,8 @@
 
 
     <h2>Projects</h2>
+    <form action="{% url  'lecturers:project_delete'%}" method="post">
+    {% csrf_token %}
     <table class="table table-striped">
         <tr>
             <th>Status</th>
@@ -19,12 +21,17 @@
                 <td><a href="{% url 'lecturers:project' project.pk %}">{{ project.title }}</a></td>
                 <td>{{ project.lecturer }}</td>
                 <td>
-                    {% if project.lecturer == lecturer %}
-                    <a href="{% url 'lecturers:project_delete' project.pk %}">{% bootstrap_icon "remove" %} </a>
+                    {% if project.lecturer == lecturer and project.status == "free"%}
+                        <input type="radio" name="to_delete" id="{{ project.pk }}"
+                               value="{{ project.pk }}"/>
                     {% endif %}
                 </td>
             </tr>
         {% endfor %}
     </table>
+
     <br/>
+    <input type="submit" value="Delete" />
+    </form>
+    </br>
 {% endblock %}
