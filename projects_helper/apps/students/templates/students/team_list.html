@@ -18,7 +18,9 @@
         {% for team in teams %}
             <tr>
                 <td>
-                    {% if not team.is_full and  not team.is_locked %}
+                    {% if student_team == team%}
+                        {% bootstrap_icon "user" %}
+                    {% elif not team.is_full and  not team.is_locked %}
                         <input type="radio" name="to_join" id="{{ team.pk }}"
                                value="{{ team.pk }}"/>
                     {% endif %}

@@ -28,24 +28,26 @@ def profile(request):
 
 @login_required
 @user_passes_test(is_student)
-def pick_project(request, project_pk):
+def pick_project(request):
     student = Student.objects.get(user=request.user)
     team = student.team
-    project_picked = Project.objects.get(pk=project_pk)
-    if project_picked.status() == "free" and not team.is_locked:
-        team.select_preference(project_picked)
-        team.save()
-        messages.success(request,
-                         "You have successfully picked project " +
-                         project_picked.title)
-    elif project_picked.status() != "free":
-        messages.error(request,
-                       "Project " + project_picked +
-                       " is already occupied," +
-                       " you can't pick that project")
-    elif team.is_locked:
-        messages.error(request,
-                       "You can't pick project: project already assigned")
+    proj_pk = request.POST.get('to_pick', False)
+    if proj_pk:
+        project_picked = Project.objects.get(pk=proj_pk)
+        if project_picked.status() == "free" and not team.is_locked:
+            team.select_preference(project_picked)
+            team.save()
+            messages.success(request,
+                             "You have successfully picked project " +
+                             project_picked.title)
+        elif project_picked.status() != "free":
+            messages.error(request,
+                           "Project " + project_picked +
+                           " is already occupied," +
+                           " you can't pick that project")
+        elif team.is_locked:
+            messages.error(request,
+                           "You can't pick project: project already assigned")
 
     return redirect(reverse('students:project_list'))
 
@@ -82,6 +84,12 @@ class ListTeams(ListView, LoginRequiredMixin, UserPassesTestMixin):
         model = Team
         template_name = "students/team_list.html"
         context_object_name = 'teams'
+
+        def get_context_data(self, **kwargs):
+            context = super(ListTeams, self).get_context_data(**kwargs)
+            student = Student.objects.get(user=self.request.user)
+            context['student_team'] = student.team
+            return context
 
 
 @login_required

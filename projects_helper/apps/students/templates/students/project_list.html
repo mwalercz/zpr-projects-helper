@@ -5,6 +5,8 @@
 
 
     <h2>Projects</h2>
+    <form action="{% url  'students:pick_project'%}" method="post">
+    {% csrf_token %}
     <table class="table table-striped">
         <tr>
             <th>Pick</th>
@@ -17,7 +19,8 @@
                 {% if project == project_picked %}
                     <td>{% bootstrap_icon "user" %}</td>
                 {% elif project.status == "free" and not team.is_locked %}
-                    <td><a href='{% url 'students:pick_project' project.pk %}'>{% bootstrap_icon "ok" %}</a></td>
+                    <td><input type="radio" name="to_pick" id="{{ project.pk }}"
+                               value="{{ project.pk }}"/></td>
                 {% else %}
                     <td></td>
                 {% endif %}
@@ -27,4 +30,9 @@
             </tr>
         {% endfor %}
     </table>
+    <br/>
+    <input type="submit" value="Pick" />
+
+    </form>
+    <br/>
 {% endblock %}
