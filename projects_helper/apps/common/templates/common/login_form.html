@@ -4,6 +4,7 @@
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
+    {% include "common/messages.html" %}
     <h2>Login</h2>
     <form method="post" action="{% url 'common:login' %}">
         {% csrf_token %}

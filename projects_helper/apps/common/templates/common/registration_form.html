@@ -2,6 +2,7 @@
 {% load bootstrap3 %}
 
 {% block content %}
+    {% include "common/messages.html" %}
     <h2>Register</h2>
     <form id="registration_form" action="{% url 'common:register' %}" method="post">
         {% csrf_token %}
