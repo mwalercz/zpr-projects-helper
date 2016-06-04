@@ -17,9 +17,9 @@ def profile(request):
     student = Student.objects.get(pk=request.user.pk)
     project_assigned = student.team.project_assigned
     if project_assigned is not None:
-        messages.info(request, "You are already assigned to project."
-                               "You can't switch project preference."
-                               "You can't switch or create new team.")
+        messages.info(request, "You are already assigned to project.")
+        messages.info(request, "You can't switch project preference.")
+        messages.info(request, "You can't switch or create new team.")
     return render(request,
                   "students/profile.html",
                   {'user': request.user,
@@ -72,6 +72,7 @@ class ListProjects(ListView, LoginRequiredMixin, UserPassesTestMixin):
     def get_context_data(self, **kwargs):
         context = super(ListProjects, self).get_context_data(**kwargs)
         student = Student.objects.get(user=self.request.user)
+        context["student"] = student
         context['team'] = student.team
         context['project_picked'] = student.project_preference
         return context
@@ -89,6 +90,7 @@ class ListTeams(ListView, LoginRequiredMixin, UserPassesTestMixin):
             context = super(ListTeams, self).get_context_data(**kwargs)
             student = Student.objects.get(user=self.request.user)
             context['student_team'] = student.team
+            context['student'] = student
             return context
 
 

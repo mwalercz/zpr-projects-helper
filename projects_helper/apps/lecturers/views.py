@@ -101,3 +101,16 @@ def assign_team(request, project_pk):
         messages.error(request, "Cannot assign: access denied")
 
     return redirect(reverse_lazy('lecturers:project', kwargs={'project_pk': proj.pk}))
+
+@login_required
+@user_passes_test(is_lecturer)
+def modify_project(request, project_pk):
+    proj = get_object_or_404(Project, pk=project_pk)
+    form = ProjectForm(request.POST or None, instance=proj)
+    if form.is_valid():
+        form.save()
+        messages.info(request, "You have succesfully updated project:" + proj.title)
+        return redirect(reverse("lecturers:project", kwargs={'project_pk': proj.pk}))
+    return render(request, "lecturers/project_modify.html",
+                  context={'form': form,
+                           'project': proj})

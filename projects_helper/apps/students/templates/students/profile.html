@@ -5,12 +5,11 @@
     {% include "common/profile.html" %}
     <h2>Student profile</h2>
     <div><h4>Team</h4>
-{#    style="list-style: decimal inside;">#}
-        <ol>
+        <ul>
         {% for member in student.team.team_members %}
             <li>{{ member.user.username }}, email: <a href="mailto:{{ member.user.email }}">{{ member.user.email }}</a></li>
         {% endfor %}
-        </ol>
+        </ul>
     </div>
     <div><h4>Project preference </h4>
         {% with project_preference=student.team.project_preference %}

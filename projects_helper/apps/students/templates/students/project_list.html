@@ -19,7 +19,7 @@
                 {% if project == project_picked %}
                     <td>{% bootstrap_icon "user" %}</td>
                 {% elif project.status == "free" and not team.is_locked %}
-                    <td><input type="radio" name="to_pick" id="{{ project.pk }}"
+                    <td class="radio"><input type="radio" name="to_pick" id="{{ project.pk }}"
                                value="{{ project.pk }}"/></td>
                 {% else %}
                     <td></td>
@@ -30,8 +30,13 @@
             </tr>
         {% endfor %}
     </table>
-    <br/>
-    <input type="submit" value="Pick" />
+    {% if not student.is_assigned_to_project %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary" >
+                {% bootstrap_icon "ok" %} Pick
+            </button>
+        {% endbuttons %}
+    {% endif %}
 
     </form>
     <br/>

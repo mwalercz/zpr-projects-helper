@@ -1,10 +1,10 @@
 <h2>Project</h2>
-<div><b>Title:</b> {{ project.title }}</div>
+<div><h4>Title</h4>{{ project.title }}</div>
 
-<div><b>Lecturer:</b> {{ project.lecturer.user.username }}
-    (<i>{{ project.lecturer.user.email }}</i>)
+<div><h4>Lecturer</h4> {{ project.lecturer.user.username }},
+    email: <a href="mailto:{{ member.user.email }}">{{ member.user.email }}</a>
 </div>
 
-<div><b>Description:</b>
+<div><h4>Description</h4>
     <div>{{ project.description }}</div>
 </div>

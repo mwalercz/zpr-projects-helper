@@ -119,6 +119,13 @@ class Student(models.Model):
                              blank=True)
 
     @property
+    def is_assigned_to_project(self):
+        if self.project_assigned is None:
+            return False
+        else:
+            return True
+        
+    @property
     def project_assigned(self):
         return self.team.project_assigned
 

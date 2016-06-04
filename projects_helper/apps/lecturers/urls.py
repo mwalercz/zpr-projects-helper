@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^projects/del/$', views.project_delete, name="project_delete"),
     url(r'^projects/(?P<project_pk>\d+)/assign/$', views.assign_team, name="assign_team"),
     url(r'^projects/new/$', views.project_new, name="project_new"),
+    url(r'^projects/(?P<project_pk>\d+)/modify/$', views.modify_project, name="modify_project"),
 
 ]

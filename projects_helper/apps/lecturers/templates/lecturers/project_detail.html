@@ -1,42 +1,49 @@
 {% extends 'lecturers/base.html' %}
 
 {% block content %}
+    {% load bootstrap3 %}
     {% include 'common/project_detail.html' %}
-</br>
-    <table>
-    <tr>
-        <th>Teams assigned:</th>
-    </tr>
-    <tr>
-        <td>{{ project.team_assigned }}</td>
-    </tr>
-    </table>
-
-
+    <br>
+    <a href="{% url "lecturers:modify_project" project.pk %}" class="btn btn-primary"> {% bootstrap_icon "edit" %}
+        Edit</a>
+    <br>
+    <br>
+    <h4>Team assigned</h4>
+    <ul>
+        {% for member in project.team_assigned.team_members %}
+            <li>{{ member.user.username }}, email: <a href="mailto:{{ member.user.email }}">{{ member.user.email }}</a>
+            </li>
+        {% endfor %}
+    </ul>
 
     {% if project.status == "free" %}
-        </br>
-    <table>
-    <tr>
-        <th>Teams waiting for this project:</th>
-    </tr>
+        <h4>Teams waiting for this project</h4>
         {% for team in project.teams_with_preference %}
-    <tr>
-        <td>{{ team }}</td>
-    </tr>
+            <h5>Team</h5>
+            <ul>
+                {% for member in team.team_members %}
+                    <li>{{ member.user.username }}, email: <a
+                            href="mailto:{{ member.user.email }}">{{ member.user.email }}</a></li>
+                {% endfor %}
+            </ul>
         {% endfor %}
-    </table>
+
         {% if project.lecturer == lecturer %}
-            </br>
             {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-        <a><input type="button" value="Assign Teams"
-          onClick="window.location.href='{% url 'lecturers:assign_team' project.pk %}'" /></a>
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <form id="assign_form" action="{% url 'lecturers:assign_team' project.pk %}" method="post">
+                {% csrf_token %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "pencil" %} Assign teams
+                    </button>
+                {% endbuttons %}
+            </form>
         {% endif %}
     {% endif %}
 {% endblock %}

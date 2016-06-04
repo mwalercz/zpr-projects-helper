@@ -6,32 +6,35 @@
 
 
     <h2>Projects</h2>
-    <form action="{% url  'lecturers:project_delete'%}" method="post">
-    {% csrf_token %}
-    <table class="table table-striped">
-        <tr>
-            <th>Status</th>
-            <th>Title</th>
-            <th>Owner</th>
-            <th>Delete</th>
-        </tr>
-        {% for project in projects %}
+    <form action="{% url 'lecturers:project_delete' %}" method="post">
+        {% csrf_token %}
+        <table class="table table-striped">
             <tr>
-                <td>{{ project.status }}</td>
-                <td><a href="{% url 'lecturers:project' project.pk %}">{{ project.title }}</a></td>
-                <td>{{ project.lecturer }}</td>
-                <td>
-                    {% if project.lecturer == lecturer and project.status == "free"%}
-                        <input type="radio" name="to_delete" id="{{ project.pk }}"
-                               value="{{ project.pk }}"/>
-                    {% endif %}
-                </td>
+                <th>Delete</th>
+                <th>Status</th>
+                <th>Title</th>
+                <th>Owner</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for project in projects %}
+                <tr>
+                    <td>
+                        {% if project.lecturer == lecturer and project.status == "free" %}
+                            <input type="radio" name="to_delete" id="{{ project.pk }}"
+                                   value="{{ project.pk }}"/>
+                        {% endif %}
+                    </td>
+                    <td>{{ project.status }}</td>
+                    <td><a href="{% url 'lecturers:project' project.pk %}">{{ project.title }}</a></td>
+                    <td>{{ project.lecturer }}</td>
 
-    <br/>
-    <input type="submit" value="Delete" />
+                </tr>
+            {% endfor %}
+        </table>
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "remove" %} Delete
+            </button>
+        {% endbuttons %}
     </form>
     </br>
 {% endblock %}
