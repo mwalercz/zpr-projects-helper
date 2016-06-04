@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -92,6 +93,24 @@ class ListTeams(ListView, LoginRequiredMixin, UserPassesTestMixin):
             context['student_team'] = student.team
             context['student'] = student
             return context
+
+@login_required
+@user_passes_test(is_student)
+def filtered_project_list(request):
+    query = request.GET.get('query')
+    student = Student.objects.get(user=request.user)
+    filtered_projects = Project.objects.complex_filter(
+        Q(title__contains=query) |
+        Q(lecturer__user__username__contains=query) |
+        Q(lecturer__user__email__contains=query)
+    )
+
+    return render(request,
+                  template_name="students/project_list.html",
+                  context={"projects": filtered_projects,
+                           "student": student,
+                           "student_team": student.team})
+
 
 
 @login_required

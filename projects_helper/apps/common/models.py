@@ -124,7 +124,7 @@ class Student(models.Model):
             return False
         else:
             return True
-        
+
     @property
     def project_assigned(self):
         return self.team.project_assigned

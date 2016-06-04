@@ -18,22 +18,33 @@ def profile(request):
     return render(request, "lecturers/profile.html")
 
 
-class ListProjects(ListView, LoginRequiredMixin, UserPassesTestMixin):
-    def test_func(self):
-        return is_lecturer(self.request.user)
 
-    model = Project
-    template_name = "lecturers/project_list.html"
-    context_object_name = 'projects'
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(ListProjects, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        context['lecturer'] = Lecturer.objects.get(user=self.request.user)
-        return context
-        # def get_queryset(self):
-        #     return Project.objects.filter(lecturer = Lecturer.objects.get(user = self.request.user))
+@login_required
+@user_passes_test(is_lecturer)
+def project_list(request):
+    title = request.GET.get('title')
+    lecturer = Lecturer.objects.get(user=request.user)
+    projects = Project.objects.filter(lecturer=lecturer)
+    return render(request,
+                  template_name="lecturers/project_list.html",
+                  context={"projects": projects,
+                           "lecturer": lecturer})
+
+@login_required
+@user_passes_test(is_lecturer)
+def filtered_project_list(request):
+    title = request.GET.get('title')
+    lecturer = Lecturer.objects.get(user=request.user)
+    filtered_projects = Project.objects.filter(
+        lecturer=lecturer
+    ).filter(
+        title__contains=title
+    )
+    return render(request,
+                  template_name="lecturers/project_list.html",
+                  context={"projects": filtered_projects,
+                           "lecturer": lecturer})
 
 
 @login_required
@@ -53,16 +64,13 @@ def project_delete(request):
         proj = get_object_or_404(Project, pk=request.POST['to_delete'])
         if proj.lecturer.user == request.user:
             if proj.status() == 'free':
-                 proj.delete()
+                proj.delete()
             else:
                 messages.error(request, "Cannot delete occupied project")
         else:
             messages.error(request, "Cannot delete project: access denied")
 
     return redirect(reverse('lecturers:project_list'))
-
-
-
 
 
 @login_required
@@ -101,6 +109,7 @@ def assign_team(request, project_pk):
         messages.error(request, "Cannot assign: access denied")
 
     return redirect(reverse_lazy('lecturers:project', kwargs={'project_pk': proj.pk}))
+
 
 @login_required
 @user_passes_test(is_lecturer)
