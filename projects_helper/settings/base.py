@@ -20,6 +20,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_coverage',
     'bootstrap3',
     'projects_helper.apps.common',
     'projects_helper.apps.students',

@@ -1,0 +1,12 @@
+[run]
+source=
+        projects_helper/apps
+omit=
+        */migrations/*
+        */tests/*
+        */tests.py
+        *apps.py
+
+[html]
+directory =
+        docs/coverage

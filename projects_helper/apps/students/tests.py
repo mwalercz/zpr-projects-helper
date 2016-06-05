@@ -37,6 +37,22 @@ class StudentTest(WebTest):
         student_team = Student.objects.get(user__username="Macko").team
         self.assertEqual(student_team, team)
 
+    def test_new_team(self):
+        student_prev_team = Student.objects.get(user__username="Macko").team
+        response = self.app.get(reverse('students:team_list'), user="Macko")
+        form = response.forms["new_team_form"]
+        form.submit()
+        student_current_team = Student.objects.get(user__username="Macko").team
+        self.assertNotEqual(student_prev_team, student_current_team)
+
+    def test_project(self):
+        project = mommy.make(Project)
+
+        response = self.app.get(reverse('students:project',
+                                        kwargs={'project_pk': project.pk}),
+                                user="Macko")
+        self.assertContains(response, project.description)
+
     def test_filtered_project_list(self):
         project = mommy.make(Project)
         other_project = mommy.make(Project)

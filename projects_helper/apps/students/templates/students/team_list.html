@@ -59,7 +59,7 @@
         {% endif %}
     </form>
     {% if not student_team.is_locked %}
-        <form action="{% url 'students:new_team' %}" method="post">
+        <form id="new_team_form" action="{% url 'students:new_team' %}" method="post">
         {% csrf_token %}
         {% buttons %}
             <button class="btn btn-secondary"
