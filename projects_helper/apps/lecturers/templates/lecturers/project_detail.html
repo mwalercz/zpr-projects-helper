@@ -3,11 +3,13 @@
 {% block content %}
     {% load bootstrap3 %}
     {% include 'common/project_detail.html' %}
+    {% if project.lecturer == lecturer %}
     <br>
     <a href="{% url "lecturers:modify_project" project.pk %}" class="btn btn-primary"> {% bootstrap_icon "edit" %}
         Edit</a>
     <br>
     <br>
+    {% endif %}
     <h4>Team assigned</h4>
     <ul>
         {% for member in project.team_assigned.team_members %}

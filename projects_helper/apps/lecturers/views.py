@@ -25,7 +25,7 @@ def profile(request):
 def project_list(request):
     title = request.GET.get('title')
     lecturer = Lecturer.objects.get(user=request.user)
-    projects = Project.objects.filter(lecturer=lecturer)
+    projects = Project.objects.all() #filter(lecturer=lecturer)
     return render(request,
                   template_name="lecturers/project_list.html",
                   context={"projects": projects,
@@ -117,9 +117,12 @@ def modify_project(request, project_pk):
     proj = get_object_or_404(Project, pk=project_pk)
     form = ProjectForm(request.POST or None, instance=proj)
     if form.is_valid():
-        form.save()
-        messages.info(request, "You have succesfully updated project:" + proj.title)
-        return redirect(reverse("lecturers:project", kwargs={'project_pk': proj.pk}))
+        if proj.lecturer == Lecturer.objects.get(user = request.user):
+            form.save()
+            messages.info(request, "You have successfully updated project:" + proj.title)
+        else:
+            messages.error(request, "Access denied")
+        return redirect(reverse("lecturers:modify_project", kwargs={'project_pk': proj.pk}))
     return render(request, "lecturers/project_modify.html",
                   context={'form': form,
                            'project': proj})

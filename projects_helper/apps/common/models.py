@@ -54,7 +54,7 @@ class Team(models.Model):
 
     def __str__(self):
         tmp_str = ""
-        for student in self.student_set.all():
+        for student in self.student_set.all().order_by('user__username'):
             if tmp_str != "":
                 tmp_str += ", "
             tmp_str += student.user.username
