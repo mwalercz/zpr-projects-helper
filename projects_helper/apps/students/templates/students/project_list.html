@@ -5,6 +5,7 @@
 
 
     <form class="navbar-form navbar-right"
+          id="search_form"
           role="search"
           action="{% url 'students:filtered_project_list' %}"
           method="get">
@@ -19,7 +20,7 @@
         </div>
     </form>
     <h2>Projects</h2>
-    <form action="{% url 'students:pick_project' %}" method="post">
+    <form id='pick_project_form' action="{% url 'students:pick_project' %}" method="post">
         {% csrf_token %}
         <table class="table table-striped">
             <tr>
@@ -44,7 +45,7 @@
                 </tr>
             {% endfor %}
         </table>
-        {% if not student.is_assigned_to_project %}
+        {% if not team.is_locked %}
             {% buttons %}
                 <button type="submit" class="btn btn-primary">
                     {% bootstrap_icon "ok" %} Pick

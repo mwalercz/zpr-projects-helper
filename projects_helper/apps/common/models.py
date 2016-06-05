@@ -30,17 +30,12 @@ class Team(models.Model):
 
     @property
     def is_full(self):
-        if len(self.student_set.all()) == 2:
-            return True
-        else:
-            return False
+        return len(self.student_set.all()) == 2
 
     @property
     def is_locked(self):
-        if self.project_assigned is not None:
-            return True
-        else:
-            return False
+        val = self.project_assigned is not None
+        return val
 
     @property
     def team_members(self):
@@ -120,10 +115,8 @@ class Student(models.Model):
 
     @property
     def is_assigned_to_project(self):
-        if self.project_assigned is None:
-            return False
-        else:
-            return True
+        val = self.project_assigned is not None
+        return val
 
     @property
     def project_assigned(self):
@@ -141,7 +134,7 @@ class Student(models.Model):
 
     def join_team(self, team):
         if not self.team.is_locked and not team.is_full:
-            self.team = team;
+            self.team = team
 
     def save(self, *args, **kwargs):
         if self.team_id is None:

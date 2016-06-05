@@ -1,14 +1,11 @@
-from django.contrib.auth.decorators import user_passes_test, login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib import messages
-from django.forms import ModelForm
+from django.contrib.auth.decorators import user_passes_test, login_required
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import IntegrityError
+from django.shortcuts import render, redirect, get_object_or_404
 
-from projects_helper.apps.lecturers import is_lecturer
 from projects_helper.apps.common.models import Project, Lecturer
+from projects_helper.apps.lecturers import is_lecturer
 from projects_helper.apps.lecturers.forms import ProjectForm
 
 
@@ -25,7 +22,7 @@ def profile(request):
 def project_list(request):
     title = request.GET.get('title')
     lecturer = Lecturer.objects.get(user=request.user)
-    projects = Project.objects.all() #filter(lecturer=lecturer)
+    projects = Project.objects.filter(lecturer=lecturer)
     return render(request,
                   template_name="lecturers/project_list.html",
                   context={"projects": projects,
