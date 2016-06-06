@@ -12,7 +12,7 @@ Jeśli posiadamy rozpakowany projekt, to pomijamy kroki 1-3.
         * mkdir zpr-projects-helper
         * cd zpr-projects-helper
     * klonujemy repo:
-        * git clone https://github.com/mwalercz/zpr-projects-helper
+        * git clone https://github.com/mwalercz/zpr-projects-helper -b release
 4. ściągamy pythona 3.4: 
     * sudo apt-get install python3.4
 5. ściągamy virtualenv i virtualenvwrapper i tworzymy środowisko o nazwie "zpr-projects-helper":
@@ -36,8 +36,8 @@ Jeśli posiadamy rozpakowany projekt, to pomijamy kroki 1-3.
         * username: projects_user, password: password
     * dodajemy nową baze danych: 
         * name: projects_helper, jej właścicielem (ownerem) powinien być projects_user
-        * jeśli nie podoba nam się nazwa/użytkownik bazy danych to można to zmienić w settings/local.py, równie dobrze możemy ustawić sqllite jako podstawową bazę i wtedy nic nie trzeba konfigurowac
-10. django tworzy dla nas bazę danych z dostępnych modeli
+        * jeśli nie podoba nam się nazwa/użytkownik bazy danych to można to zmienić w settings/base.py, równie dobrze możemy ustawić sqllite jako podstawową bazę i wtedy nic nie trzeba konfigurowac
+10. django tworzy dla nas bazę danych z dostępnych modeli (jeśli wcześniej w bazie danych były jakieś tabele, to należy je wykasować)
     * python manage.py makemigrations
     * python manage.py migrate  
 11. uruchamiamy testy automatyczne razem z coverage 
