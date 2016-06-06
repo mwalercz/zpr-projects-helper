@@ -1,3 +1,8 @@
+/
+docs/coverage
+/projects_helper/apps/common/migrations
+/
+docs/coverage
 *.log
 
 *.py[codt]
